@@ -12,33 +12,18 @@ namespace Auspex.TripService
     {
         public void Configure(IApplicationBuilder app)
         {
-
-            // app.UseMvc(config =>
-            // {
-            //      config.MapRoute(
-            //          name: "default",
-            //          template: "{controller=Car}/{action=GetAll}/{id?}"
-            //      );
-            // });
-            //app.UseMiddleware()
-
             app.UseMvc();
-
         }
 
         public void ConfigureServices(IServiceCollection services)
         {          
-            
-            // services.AddAuthorization(config => {
-            //     config.AddPolicy()
-            // })
+            services.AddDbContext<TripServiceContext>();
 
             services.AddMvc();
 
             services.AddSingleton<ICarRepository, CarRepository>();  
             services.AddSingleton<ILocationRepository, LocationRepository>();            
-            services.AddSingleton<ITripRepository, TripRepository>();            
-                      
+            services.AddSingleton<ITripRepository, TripRepository>();   
         }
     }
 }

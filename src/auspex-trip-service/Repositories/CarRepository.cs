@@ -8,61 +8,56 @@ namespace Auspex.TripService.Repositories
 {
     public class CarRepository : ICarRepository
     {
-        public CarRepository()
+        private readonly TripServiceContext _context;
+
+        public CarRepository(TripServiceContext context)
         {
+            _context = context;
         }
 
         public IEnumerable<Car> GetAll()
         {
-            using (var db = new TripServiceContext())
-            {
-                return db.Cars.ToList();
-            }            
+            return _context.Cars.ToList();
+        
         }
 
         public void Add(Car item)
         {
-            using (var db = new TripServiceContext())
+            var latestCar = _context.Cars.OrderByDescending(c => c.Id).FirstOrDefault();
+            if (latestCar == null)
             {
-                var latestCar = db.Cars.OrderByDescending(c => c.Id).FirstOrDefault();
-                if (latestCar == null)
-                {
-                    item.Id = 1;
-                }
-                else
-                {
-                    item.Id = latestCar.Id + 1;   
-                }
-                db.Cars.Add(item);
-                db.SaveChanges();
+                item.Id = 1;
             }
+            else
+            {
+                item.Id = latestCar.Id + 1;   
+            }
+            _context.Cars.Add(item);
+            _context.SaveChanges();            
         }
 
         public Car Find(int key)
         {
-            using (var db = new TripServiceContext())
-            {
-                return db.Cars.FirstOrDefault(c => c.Id == key);
-            }
+            return _context.Cars.FirstOrDefault(c => c.Id == key);
         }
 
         public Car Remove(int key)
         {
-            using (var db = new TripServiceContext())            
-            {
-                db.Cars.Remove(Find(key));
-                db.SaveChanges();
-            }
+            _context.Cars.Remove(Find(key));
+            _context.SaveChanges();
+
             return null;
         }
 
         public void Update(Car item)
         {
-            using (var db = new TripServiceContext())
-            {
-                db.Cars.Update(item);
-                db.SaveChanges();
-            }
+            _context.Cars.Update(item);
+            _context.SaveChanges();
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
         }
     }
 }

@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using System;
 
 namespace Auspex.TripService.Repositories
 {
-    public interface IRepository<T>
+    public interface IRepository<T> : IDisposable
     {
         void Add(T item);
         IEnumerable<T> GetAll();

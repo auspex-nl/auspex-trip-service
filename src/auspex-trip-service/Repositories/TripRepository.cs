@@ -45,5 +45,10 @@ namespace Auspex.TripService.Repositories
         {
             Trips[item.Id] = item;
         }
+
+        public void Dispose()
+        {
+
+        }
     }
 }
